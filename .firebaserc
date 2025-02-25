@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "prod": "sophina-ai",
+    "dev": "sophina-ai-dev"
+  }
+}
