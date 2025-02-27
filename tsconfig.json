@@ -11,7 +11,5 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["functions/src/**/*.ts", "functions/src/**/*.tsx"]
 }

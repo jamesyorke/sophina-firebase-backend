@@ -28,6 +28,7 @@ export const helloWorld = onCall((data, context) => {
   // The `data` parameter contains the request data sent from the client.
   // The `context` parameter contains the authentication context, such as user info.
   console.log('Function called with data:', data);
+  console.log('Function called with context:', context);
   return {
     message: 'Hello, World!',
   };
