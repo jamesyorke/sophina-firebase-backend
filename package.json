@@ -1,6 +1,8 @@
 {
   "scripts": {
     "lint": "eslint .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -8,18 +10,22 @@
     "deploy-prod": "firebase use prod; firebase deploy",
     "logs": "firebase functions:log",
     "emulator": "firebase use dev; firebase emulators:start --import=./emulator-saved-data --export-on-exit",
-    "killemulator": "lsof -t -i:4000 -i:4001 -i:4002 -i:4003 -i:5004 -i:9100 -i:5002 -i:5003 -i:8081 -i:9001 -i:9200 -i:9099 -i:5001 -i:8080 | xargs kill -9"
+    "killemulator": "lsof -t -i:4000 -i:4001 -i:4002 -i:4003 -i:5004 -i:9100 -i:5002 -i:5003 -i:8081 -i:9001 -i:9200 -i:9099 -i:5001 -i:8080 | xargs kill -9",
+    "clean": "rm -rf node_modules && rm -rf package-lock.json; npm install"
   },
   "dependencies": {
-    "firebase-admin": "^11.11.0",
-    "firebase-functions": "^4.5.0",
+    "firebase-admin": "^13.1.0",
+    "firebase-functions": "^6.3.2",
     "openai": "^4.86.1"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
     "eslint": "^9.21.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-plugin-import": "^2.29.1"
+    "eslint-plugin-import": "^2.31.0",
+    "glob": "^11.0.1",
+    "minimatch": "^10.0.1",
+    "typescript": "^5.7.3"
   }
 }
