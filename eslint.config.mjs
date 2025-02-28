@@ -51,7 +51,7 @@ export default [{
     },
 
     rules: {
-        indent: ["error", 2],
+        indent: ["error", 4],
 
         quotes: ["error", "single", {
             avoidEscape: true,
@@ -71,7 +71,7 @@ export default [{
         "brace-style": ["error", "1tbs", {
             allowSingleLine: true,
         }],
-
+        
         "arrow-parens": ["error", "always"],
 
         "max-len": ["warn", {
