@@ -1,17 +1,18 @@
 {
   "scripts": {
     "lint": "eslint .",
-    "build": "tsc",
+    "build": "tsc --build",
     "build:watch": "tsc --watch",
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
-    "deploy-dev": "firebase use dev; firebase deploy",
-    "deploy-prod": "firebase use prod; firebase deploy",
+    "deploy-dev": "firebase use dev; npm run build && npm run deploy-firebase",
+    "deploy-prod": "firebase use prod; npm run build && npm run deploy-firebase",
     "logs": "firebase functions:log",
-    "emulator": "firebase use dev; firebase emulators:start --import=./emulator-saved-data --export-on-exit",
+    "emulator": "firebase use dev; npm run build; firebase emulators:start --import=./emulator-saved-data --export-on-exit",
     "killemulator": "lsof -t -i:4000 -i:4001 -i:4002 -i:4003 -i:5004 -i:9100 -i:5002 -i:5003 -i:8081 -i:9001 -i:9200 -i:9099 -i:5001 -i:8080 | xargs kill -9",
-    "clean": "rm -rf node_modules && rm -rf package-lock.json; npm install"
+    "clean": "rm -rf node_modules && rm -rf package-lock.json; npm install",
+    "deploy-firebase": "firebase deploy"
   },
   "dependencies": {
     "firebase-admin": "^13.1.0",

@@ -1,8 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../lib/functions",
-    "rootDir": "./"
+    "outDir": "./lib/",
+    "rootDir": "./src",
+    "tsBuildInfoFile": "../lib/functions/functions.tsbuildinfo"
   },
-  "include": ["**/*.ts"]
+  "include": ["src/**/*.ts"]
 }

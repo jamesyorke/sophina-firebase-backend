@@ -11,6 +11,7 @@
     "module": "commonjs",
     "target": "es6",
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "tsBuildInfoFile": "./lib/root.tsbuildinfo"
   }
 }

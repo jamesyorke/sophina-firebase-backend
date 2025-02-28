@@ -16,7 +16,7 @@ import { onCall } from 'firebase-functions/v2/https';
 import * as logger from 'firebase-functions/logger';
 
 import OpenAI from 'openai';
-const openai = new OpenAI();
+
 // const completion = await openai.chat.completions.create({
 //     model: 'gpt-4o',
 //     store: true,
@@ -49,11 +49,24 @@ export const helloWorld = onCall((data, context) => {
     };
 });
 
-export const chatGptChat = onCall(async (data, context) => {
+// ChatGPT Chat
+
+async function getOpenAIObject() {
+    const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+    });
+
+	return openai;
+}
+
+console.log('Getting OpenAI object: ', process.env.OPENAI_API_KEY);
+
+export const chatGptChat = onCall(async (data) => {
     // The `data` parameter contains the request data sent from the client.
     // The `context` parameter contains the authentication context, such as user info.
     console.log('Function called with data:', data);
-    console.log('Function called with context:', context);
+    // console.log('Function called with context:', context);
+    const openai = await getOpenAIObject();
     const completion = await openai.chat.completions.create({
         model: 'gpt-4o',
         store: true,
