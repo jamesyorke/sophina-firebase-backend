@@ -37,13 +37,14 @@ import OpenAI from 'openai';
 //   response.send('Hello from Firebase!');
 // });
 
-export const helloWorld = onCall((data, context) => {
+// export const helloWorld = onCall((data, context) => {
+export const helloWorld = onCall(() => {
     // The `data` parameter contains the request data sent from the client.
     // The `context` parameter contains the authentication context, such as user info.
-    console.log('Function called with data:', data);
-    console.log('Function called with context:', context);
-    logger.info('Function called with data:', data);
-    logger.info('Function called with context:', context);
+    // console.log('Function called with data:', data);
+    // console.log('Function called with context:', context);
+    // logger.info('Function called with data:', data);
+    // logger.info('Function called with context:', context);
     return {
         message: 'Hello, World!',
     };
@@ -55,17 +56,20 @@ async function getOpenAIObject() {
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
-
 	return openai;
 }
 
-console.log('Getting OpenAI object: ', process.env.OPENAI_API_KEY);
-
-export const chatGptChat = onCall(async (data) => {
+export const chatGptChat = onCall(async (data, context) => {
     // The `data` parameter contains the request data sent from the client.
     // The `context` parameter contains the authentication context, such as user info.
-    console.log('Function called with data:', data);
-    // console.log('Function called with context:', context);
+    if (!data.data) {
+        throw new Error('No data provided to function');
+    }
+    const inputMessage = data.data.message;
+    // return {
+    //     message: message,
+    // };
+    console.log('Function called with context:', context);
     const openai = await getOpenAIObject();
     const completion = await openai.chat.completions.create({
         model: 'gpt-4o',
@@ -73,13 +77,16 @@ export const chatGptChat = onCall(async (data) => {
         messages: [
             {
                 'role': 'user',
-                'content': 'write a haiku about ai',
+                'content': inputMessage,
             },
         ],
     });
 
-    const message = completion.choices[0].message.content;
+    console.log('Function called with completion:', completion);
+    const outputMessage = completion.choices[0].message.content;
+    console.log('Function called with outputMessage:', outputMessage);
+
     return {
-        message: message,
+        message: outputMessage,
     };
 });
