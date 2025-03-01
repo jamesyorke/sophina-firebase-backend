@@ -82,7 +82,7 @@ export const chatGptChat = onCall(async (data, context) => {
         ],
     });
 
-    console.log('Function called with completion:', completion);
+    // console.log('Function called with completion:', completion);
     const outputMessage = completion.choices[0].message.content;
     console.log('Function called with outputMessage:', outputMessage);
 
