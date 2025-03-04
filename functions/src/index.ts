@@ -56,7 +56,7 @@ async function getOpenAIObject() {
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
-	return openai;
+    return openai;
 }
 
 export const chatGptChat = onCall(async (data, context) => {
@@ -70,7 +70,9 @@ export const chatGptChat = onCall(async (data, context) => {
     //     message: message,
     // };
     console.log('Function called with context:', context);
+    logger.info('Getting OpenAI object');
     const openai = await getOpenAIObject();
+    logger.info('OpenAI object created');
     const completion = await openai.chat.completions.create({
         model: 'gpt-4o',
         store: true,
@@ -81,11 +83,12 @@ export const chatGptChat = onCall(async (data, context) => {
             },
         ],
     });
-
+    logger.info('Completion created');
     // console.log('Function called with completion:', completion);
     const outputMessage = completion.choices[0].message.content;
+    logger.info('Output message created');
     console.log('Function called with outputMessage:', outputMessage);
-
+    logger.info('Returning output message');
     return {
         message: outputMessage,
     };
