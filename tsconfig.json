@@ -1,0 +1,17 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./functions" }
+    // Add more references here if you have other subprojects
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./lib",
+    "rootDir": "./",
+    "module": "commonjs",
+    "target": "es6",
+    "declaration": true,
+    "sourceMap": true,
+    "tsBuildInfoFile": "./lib/root.tsbuildinfo"
+  }
+}

@@ -1,5 +1,30 @@
 {
+  "scripts": {
+    "lint": "eslint .",
+    "build": "tsc --build",
+    "build:watch": "tsc --watch",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy-dev": "firebase use dev; npm run build; firebase deploy",
+    "deploy-prod": "firebase use prod; npm run build; firebase deploy",
+    "logs": "firebase functions:log",
+    "emulator": "firebase use dev; npm run build; firebase emulators:start --import=./emulator-saved-data --export-on-exit",
+    "killemulator": "lsof -t -i:4000 -i:4001 -i:4002 -i:4003 -i:4500 -i:9150 -i:5004 -i:9100 -i:5002 -i:5003 -i:8081 -i:9001 -i:9200 -i:9099 -i:5001 -i:8080 | xargs kill -9",
+    "clean": "rm -rf node_modules && rm -rf package-lock.json; npm install"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.1.0",
+    "firebase-functions": "^6.3.2"
+  },
   "devDependencies": {
-    "eslint": "^9.21.0"
+    "@eslint/compat": "^1.2.7",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "eslint": "^9.21.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.31.0",
+    "glob": "^11.0.1",
+    "minimatch": "^10.0.1",
+    "typescript": "^5.7.3"
   }
 }
