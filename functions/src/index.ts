@@ -11,6 +11,8 @@
 
 // import { onRequest } from "firebase-functions/v2/https";
 import { onCall } from 'firebase-functions/v2/https';
+import * as functions from 'firebase-functions';
+
 // import * as logger from 'firebase-functions/logger';
 // import { onRequest } from 'firebase-functions/v2/https';
 import * as logger from 'firebase-functions/logger';
@@ -38,13 +40,16 @@ import OpenAI from 'openai';
 // });
 
 // export const helloWorld = onCall((data, context) => {
-export const helloWorld = onCall(() => {
+export const helloWorld = onCall((request) => {
     // The `data` parameter contains the request data sent from the client.
     // The `context` parameter contains the authentication context, such as user info.
     // console.log('Function called with data:', data);
     // console.log('Function called with context:', context);
     // logger.info('Function called with data:', data);
     // logger.info('Function called with context:', context);
+    logger.info('auth:', request.auth);
+    logger.info('uid:', request.auth?.uid);
+    logger.info('data:', request.data);
     return {
         message: 'Hello, World!',
     };
@@ -59,24 +64,36 @@ async function getOpenAIObject() {
     return openai;
 }
 
-export const chatGptChat = onCall(async (data, context) => {
+export const chatGptChat = onCall(async (request) => {
     // The `data` parameter contains the request data sent from the client.
     // The `context` parameter contains the authentication context, such as user info.
-    if (!data.data) {
+    const user = request.auth;
+    const data = request.data;
+    if (!user) {
+        logger.error('User must be logged in');
+        throw new Error('User must be logged in');
+    }
+    if (!data) {
+        logger.error('No data provided to function');
         throw new Error('No data provided to function');
     }
-    const inputMessage = data.data.message;
-    // return {
-    //     message: message,
-    // };
-    console.log('Function called with context:', context);
+    const inputMessage = data.message;
+    const previousMessages = data.previousMessages;
     logger.info('Getting OpenAI object');
     const openai = await getOpenAIObject();
     logger.info('OpenAI object created');
+    const allMessages = [...(previousMessages || []).map(message => ({
+        role: 'user',
+        content: message
+    }))]
+
+    console.log('allMessages:', allMessages);
+
     const completion = await openai.chat.completions.create({
         model: 'gpt-4o',
         store: true,
         messages: [
+            ...allMessages,
             {
                 'role': 'user',
                 'content': inputMessage,
@@ -84,12 +101,17 @@ export const chatGptChat = onCall(async (data, context) => {
         ],
     });
     logger.info('Completion created');
-    // console.log('Function called with completion:', completion);
+    console.log('Function called with completion:', completion);
     const outputMessage = completion.choices[0].message.content;
     logger.info('Output message created');
-    console.log('Function called with outputMessage:', outputMessage);
-    logger.info('Returning output message');
+    logger.info('\nFunction called with outputMessage:', outputMessage);
+    logger.info('\nFunction called with previousMessages:', previousMessages);
+    const updatedAllMessages = [...(previousMessages || []), outputMessage];
+    logger.info('\n\n');
+    logger.info('\nFunction called with updatedAllMessages:', updatedAllMessages);
+
     return {
-        message: outputMessage,
+        latestMessage: outputMessage,
+        allMessages: updatedAllMessages
     };
 });
