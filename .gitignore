@@ -69,3 +69,7 @@ node_modules/
 .dataconnect
 
 emulator-saved-data/
+
+.env.local
+.env.dev
+.env.prod
