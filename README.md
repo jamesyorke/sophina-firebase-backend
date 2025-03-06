@@ -1,43 +1,68 @@
 # Sophina Firebase Admin
-## Accounts
+## Setup
+Install firebase 
+```
+npm install -g firebase-tools
+```
+
+```
 
 ### Production
-`$ firebase use prod`
+```
+firebase use prod
+```
 
 ### Development
-`$ firebase use dev`
+```
+firebase use dev
+```
 
 ## Deploy
-`$ firebase deploy`
+#### Development
+```
+npm run deploy-dev
+```
 
-> [!NOTE]
-> Below is docs from the old project, so might not work exactly as expected.
+#### Production
+```
+npm run deploy-prod
+```
+
 
 ## Run Locally
 ### Emulator
+```
+npm run emulator
+```
 
-`$ cd functions`
-`$ npm run emulator`
+#### Live Updates
+> Open a new terminal 
+> Run the following command to ensure TypeScript is watching for changes to convert to JavaScript.
+```
+cd functions
+npm run build:watch
+```
 
-If emulator doesn't start up and gives this error
-`⚠  firestore: Port {portId} is not open on localhost, could not start Firestore Emulator.`
-`⚠  firestore: Port 8080 is not open on localhost, could not start Firestore Emulator.`
+#### Issues
+> If emulator doesn't start up and gives this error
+```
+⚠  firestore: Port {portId} is not open on localhost, could not start Firestore Emulator.
+⚠  firestore: Port 8080 is not open on localhost, could not start Firestore Emulator.
+```
 
-run the following command to kill the process
-`$ npm run killemulator`
+```
+npm run killemulator
+```
 
-`$ lsof -ti tcp:{portId} | xargs kill`
-`$ lsof -ti tcp:8080 | xargs kill`
+> If that fails kill emulator
+```
+$ lsof -ti tcp:{portId} | xargs kill
+$ lsof -ti tcp:8080 | xargs kill
+```
 
 [Taken from this link](https://fredriccliver.medium.com/port-8080-is-not-open-on-localhost-could-not-start-firestore-emulator-15c8c367d219)
 
-#### Debug
-Hit http://localhost:5001/plantwise-dev/us-central1/updateFirestoreFoodItemDatabase?updatecount=300
-
-Update aroma pairings
-updateFirestoreAromaPairingDatabase
-
-
+> Note below taken from another project.
 ### Firebase deploy
 
 When deploying there will be a disconnect between indexes and firestore security rules_version.
