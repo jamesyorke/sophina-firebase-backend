@@ -5,8 +5,6 @@ Install firebase
 npm install -g firebase-tools
 ```
 
-```
-
 ### Production
 ```
 firebase use prod
