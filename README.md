@@ -1,8 +1,24 @@
 # Sophina Firebase Admin
 ## Setup
-Install firebase 
+###Install dependencies
 ```
-npm install -g firebase-tools
+npm install
+```
+
+### Environment Variables
+Ensure you have the following files in the `functions` directory of the project.
+
+.env.dev
+.env.prod
+
+Add the following to the `.env.dev` file.
+```
+OPENAI_API_KEY=your_dev_openai_api_key
+```
+
+Add the following to the `.env.prod` file.
+```
+OPENAI_API_KEY=your_production_openai_api_key
 ```
 
 ### Production
@@ -68,5 +84,7 @@ When deploying there will be a disconnect between indexes and firestore security
 Read [this](https://stackoverflow.com/questions/56307808/how-to-synchronize-firestore-rules-and-indexes) for more info on how to synchronise the security rules and indexes.
 
 Run the following command to update the indexes from the Firebase Console to this local project.
-`$ cd [project root aka. not functions]`
-`$ firebase firestore:indexes > firestore.indexes.json`
+```
+cd [project root aka. not functions]
+firebase firestore:indexes > firestore.indexes.json
+```
