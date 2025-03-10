@@ -89,10 +89,6 @@ export const chatGptChat = onCall(async (request) => {
         throw new Error('No data provided to function');
     }
     const inputMessage = data.message;
-    const previousMessages = data.previousMessages.map((message) => {
-        console.log('message:', message);
-        return createMessage(message.id, message.text, message.dateCreated, message.userType);
-    });
     const openai = await getOpenAIObject();
     const completion = await openai.beta.chat.completions.parse({
         model: 'gpt-4o',
@@ -102,7 +98,6 @@ export const chatGptChat = onCall(async (request) => {
                 'role': 'system',
                 'content': systemPrompt,
             },
-            ...previousMessages.map(convertToOpenAIMessage),
             {
                 'role': 'user',
                 'content': inputMessage,
@@ -150,7 +145,7 @@ interface OpenAIMessage {
     content: string;
 }
 
-const convertToOpenAIMessage = (message: Message): OpenAIMessage => {
+const convertStringToOpenAIMessage = (message: Message): OpenAIMessage => {
     return {
         role: message.userType === 'user' ? 'user' : 'assistant',
         content: message.text,
