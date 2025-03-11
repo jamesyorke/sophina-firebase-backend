@@ -6,11 +6,12 @@
 
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
-import * as functions from 'firebase-functions';
-export declare const helloWorld: functions.https.CallableFunction<any, Promise<{
+export declare const helloWorld: import("firebase-functions/v2/https").CallableFunction<any, Promise<{
     message: string;
 }>, unknown>;
-export declare const chatGptChat: functions.https.CallableFunction<any, Promise<{
-    latestMessage: string;
-    allMessages: any[];
+export declare const chatGptChat: import("firebase-functions/v2/https").CallableFunction<any, Promise<{
+    items?: {
+        hook?: string;
+        script?: string;
+    }[];
 }>, unknown>;
