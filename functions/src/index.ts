@@ -124,30 +124,30 @@ export const chatGptChat = onCall(async (request) => {
     // };
 });
 
-interface Message {
-    id: string;
-    text: string;
-    dateCreated: string;
-    userType: 'user' | 'assistant';
-}
+// interface Message {
+//     id: string;
+//     text: string;
+//     dateCreated: string;
+//     userType: 'user' | 'assistant';
+// }
 
-function createMessage(id: string, text: string, dateCreated: string, userType: 'user' | 'assistant'): Message {
-    return {
-        id,
-        text,
-        dateCreated: dateCreated,
-        userType,
-    };
-}
+// function createMessage(id: string, text: string, dateCreated: string, userType: 'user' | 'assistant'): Message {
+//     return {
+//         id,
+//         text,
+//         dateCreated: dateCreated,
+//         userType,
+//     };
+// }
 
-interface OpenAIMessage {
-    role: 'user' | 'assistant';
-    content: string;
-}
+// interface OpenAIMessage {
+//     role: 'user' | 'assistant';
+//     content: string;
+// }
 
-const convertStringToOpenAIMessage = (message: Message): OpenAIMessage => {
-    return {
-        role: message.userType === 'user' ? 'user' : 'assistant',
-        content: message.text,
-    };
-};
+// const convertStringToOpenAIMessage = (message: Message): OpenAIMessage => {
+//     return {
+//         role: message.userType === 'user' ? 'user' : 'assistant',
+//         content: message.text,
+//     };
+// };
