@@ -9,9 +9,17 @@
 export declare const helloWorld: import("firebase-functions/v2/https").CallableFunction<any, Promise<{
     message: string;
 }>, unknown>;
-export declare const chatGptChat: import("firebase-functions/v2/https").CallableFunction<any, Promise<{
-    items?: {
-        hook?: string;
-        script?: string;
-    }[];
-}>, unknown>;
+export declare const chatGptChat: import("firebase-functions/v2/https").CallableFunction<any, Promise<Response>, unknown>;
+interface Response {
+    id: string;
+    input: string;
+    userId: string;
+    items: ResponseOption[];
+}
+interface ResponseOption {
+    id: string;
+    hook: string;
+    script: string;
+    caption: string;
+}
+export {};

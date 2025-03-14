@@ -19,6 +19,11 @@ import * as logger from 'firebase-functions/logger';
 import OpenAI from 'openai';
 import { z } from 'zod';
 import { zodResponseFormat } from 'openai/helpers/zod';
+import * as firebase from 'firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore'
+import { v4 as uuidv4 } from 'uuid';
+
+firebase.initializeApp();
 
 // const completion = await openai.chat.completions.create({
 //     model: 'gpt-4o',
@@ -64,9 +69,8 @@ Instagram Reels which includes a hook to attract viewers in the first five to te
 When I have responded to you, You should write a script in Sophia’s style. Your first sentence must be an engaging hook in the style 
 of Sophia's videos, which means it needs to be a shocking fact or a question that is no longer than 20 words. 
 This should then be followed by an engaging explanation and ending in a call to action.You should never use the phrase 'Let's dive in!' 
-or 'Here's the tea'. Your script should use a similar structure to Sophia's scripts and should not exceed 270 words in length. 
-It should not use emoji and limit its use of exclamation marks. At the end of the script, you should begin a new paragraph beginning with 
-"This would be my recommended caption" and then recommend a caption optimised for search engine results that is connected to the script's topic. 
+or 'Here's the tea'. Your script should use a similar structure to Sophia's scripts and should be between 270 and 350 words in length. 
+It should not use emoji and limit its use of exclamation marks. You should also recommend a caption optimised for search engine results that is connected to the script's topic. 
 The hashtags featured in this caption should only use words in the script which a user would search for, and should not be made-up hashtags of trends. 
 Your caption should be written in Sophia Smith Galer's style and should not use emoji.You should always endeavour to provide the user with a script, 
 even if the text they have submitted does not include enough detail. If this happens, let them know the script didn't include enough detail, 
@@ -89,6 +93,7 @@ export const chatGptChat = onCall(async (request) => {
         throw new Error('No data provided to function');
     }
     const inputMessage = data.message;
+    const inputId = data.id;
     const openai = await getOpenAIObject();
     const completion = await openai.beta.chat.completions.parse({
         model: 'gpt-4o',
@@ -107,22 +112,86 @@ export const chatGptChat = onCall(async (request) => {
             items: z.array(z.object({
                 'hook': z.string(),
                 'script': z.string(),
+                'caption': z.string(),
             })),
         }), 'items'),
     });
     // console.log('completion.choice:', completion.choices);
     const output = completion.choices[0].message.parsed;
     console.log('output:', output);
-    return output;
-    // const outputMessage = completion.choices[0].message.content;
-    // const newMessage = createMessage(crypto.randomUUID(), outputMessage, new Date().toISOString(), 'assistant');
-    // console.log('newMessage:', newMessage);
-    // const updatedAllMessages: Message[] = [...(previousMessages || []), newMessage];
-    // console.log('updatedAllMessages:', updatedAllMessages);
-    // return {
-    //     allMessages: ["Hello world"],// ...updatedAllMessages],
-    // };
+    const response = createResponse(inputId, inputMessage, user.uid, output.items.map(createResponseOption));
+    saveToFirestore(response);
+
+    return response;
+
 });
+
+async function saveToFirestore(response: Response) {
+    const firestore = firebase.firestore();
+    const batch = firestore.batch();
+    const docRef = firestore.collection('generated_scripts').doc(response.id);
+    const docSnapshot = await docRef.get();
+    if (docSnapshot.exists) {
+        batch.update(docRef, {
+            lastUpdated: Timestamp.now(),
+        });
+    } else {
+        batch.set(docRef, {
+            input: response.input,
+            userId: response.userId,
+            createdAt: Timestamp.now(),
+            lastUpdated: Timestamp.now(),
+        });
+    }
+    docRef.set({
+        input: response.input,
+        userId: response.userId,
+        createdAt: Timestamp.now(),
+    })
+
+    response.items.forEach(item => { 
+        const itemRef = docRef.collection('items').doc(item.id);
+        batch.set(itemRef, {
+            hook: item.hook,
+            script: item.script,
+            caption: item.caption,
+            timestamp: Timestamp.now(),
+        });
+    });
+
+    await batch.commit();
+}
+
+interface Response {
+    id: string;
+    input: string;
+    userId: string;
+    items: ResponseOption[];
+}
+
+function createResponse(inputId: string, input: string, userId: string, items: ResponseOption[]): Response {
+    return {
+        id: inputId,
+        input: input,
+        userId: userId,
+        items: items,
+    };
+}
+interface ResponseOption {
+    id: string;
+    hook: string;
+    script: string;
+    caption: string;
+}
+
+function createResponseOption(item): ResponseOption {
+    return {
+        id: uuidv4(),
+        hook: item.hook,
+        script: item.script,
+        caption: item.caption,
+    };
+}
 
 // interface Message {
 //     id: string;
