@@ -169,9 +169,9 @@ interface Response {
     items: ResponseOption[];
 }
 
-function createResponse(inputId: string, input: string, userId: string, items: ResponseOption[]): Response {
+function createResponse(id: string, input: string, userId: string, items: ResponseOption[]): Response {
     return {
-        id: inputId,
+        id: id,
         input: input,
         userId: userId,
         items: items,
