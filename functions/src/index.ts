@@ -20,7 +20,7 @@ import OpenAI from 'openai';
 import { z } from 'zod';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import * as firebase from 'firebase-admin';
-import { Timestamp } from 'firebase-admin/firestore'
+import { Timestamp } from 'firebase-admin/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
 firebase.initializeApp();
@@ -75,7 +75,7 @@ The hashtags featured in this caption should only use words in the script which 
 Your caption should be written in Sophia Smith Galer's style and should not use emoji.You should always endeavour to provide the user with a script, 
 even if the text they have submitted does not include enough detail. If this happens, let them know the script didn't include enough detail, 
 and suggest areas of research they may wish to investigate to bulk out their research. 
-There should be a json array of 3 items, each with a "hook" and "script" property.`;
+There should be a json array of 3 items, each with a "hook", "script" and "caption" property.`;
 
 // const systemPrompt = `One word answers please.`;
 
@@ -121,9 +121,7 @@ export const chatGptChat = onCall(async (request) => {
     console.log('output:', output);
     const response = createResponse(inputId, inputMessage, user.uid, output.items.map(createResponseOption));
     saveToFirestore(response);
-
     return response;
-
 });
 
 async function saveToFirestore(response: Response) {
@@ -147,9 +145,9 @@ async function saveToFirestore(response: Response) {
         input: response.input,
         userId: response.userId,
         createdAt: Timestamp.now(),
-    })
+    });
 
-    response.items.forEach(item => { 
+    response.items.forEach((item: ResponseOption) => {
         const itemRef = docRef.collection('items').doc(item.id);
         batch.set(itemRef, {
             hook: item.hook,
