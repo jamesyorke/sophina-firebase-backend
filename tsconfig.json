@@ -1,5 +1,4 @@
 {
-  "files": [],
   "references": [
     { "path": "./functions" }
     // Add more references here if you have other subprojects
@@ -12,6 +11,9 @@
     "target": "es6",
     "declaration": true,
     "sourceMap": true,
-    "tsBuildInfoFile": "./lib/root.tsbuildinfo"
-  }
+    "tsBuildInfoFile": "./lib/root.tsbuildinfo",
+    "moduleResolution": "node"
+  },
+  "include": ["functions/src/version.ts"],
+  "files": ["functions/src/version.ts"]
 }
