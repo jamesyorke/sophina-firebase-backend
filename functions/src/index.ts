@@ -22,6 +22,8 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import * as firebase from 'firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { v4 as uuidv4 } from 'uuid';
+// The line below has been updated to import VERSION from the root of the project.
+import { VERSION } from './version';
 
 firebase.initializeApp();
 
@@ -47,6 +49,7 @@ firebase.initializeApp();
 
 // export const helloWorld = onCall((data, context) => {
 export const helloWorld = onCall(() => {
+    logger.info('API Version', { version: VERSION });
     return {
         message: 'Hello, World!',
     };
@@ -82,6 +85,7 @@ There should be a json array of 3 items, each with a "hook", "script" and "capti
 export const chatGptChat = onCall(async (request) => {
     // The `data` parameter contains the request data sent from the client.
     // The `context` parameter contains the authentication context, such as user info.
+    logger.info('API Version', { version: VERSION });
     const user = request.auth;
     const data = request.data;
     if (!user) {
